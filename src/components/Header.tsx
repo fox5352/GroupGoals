@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { SignInButton, LogOutButton } from "./AuthButtons";
 
 import { onAuthStateChanged } from "firebase/auth";
-
-import { auth } from "../model/fireBase";
-
+import { auth, handleLogOut, handleSignIn } from "../model/fireBase";
 import type { User } from "firebase/auth";
 
-import styles from "./Header.module.css";
+import LabelBottomNavigation from "./LabelBottomNavigation";
+
+import { AppBar, Box, IconButton, Typography } from "@mui/material";
+import { Login, Logout } from "@mui/icons-material";
+
+import theme from "../theme";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
@@ -22,55 +24,66 @@ export default function Header() {
     };
   }, []);
 
-  return (
-    <header className={styles.header}>
-      <h2 className={styles.title}>Group-Goal's</h2>
-      <BasicMenu />
-      {/* <nav className={}>{!user ? <SignInButton /> : <LogOutButton />}</nav> */}
-    </header>
-  );
-}
-
-import Button from "@mui/material/Button";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import { MouseEvent } from "react";
-// import {} fr
-
-export function BasicMenu() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handUserAuth = () => {
+    if (!user) {
+      handleSignIn();
+    } else {
+      handleLogOut();
+    }
   };
 
   return (
-    <div>
-      <Button
-        id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-        onClick={handleClick}
-      >
-        {/* <MenuIcon /> */}
-      </Button>
-      <Menu
-        id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
-      </Menu>
-    </div>
+    <>
+      <header>
+        {/* <h2 className={styles.title}>Group-Goal's</h2> */}
+        {/* TODO: desktop navigation */}
+        {/* <nav>{!user ? <SignInButton /> : <LogOutButton />}</nav> */}
+        <Box sx={{ flexGrow: 1 }} color="secondary">
+          <AppBar
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              backgroundColor: theme.palette.background.paper,
+            }}
+            position="static"
+          >
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                maxWidth: 1260,
+                width: "100%",
+                marginX: "auto",
+              }}
+            >
+              {/* LOGO */}
+              <Typography
+                component="h1"
+                sx={{
+                  fontWeight: 700,
+                  fontSize: { xs: "1.5rem", sm: "1.75rem" },
+                  px: 0.6,
+                }}
+              >
+                Group Goal's
+              </Typography>
+              {/* top nav bar */}
+              <Box sx={{ display: "flex" }}>
+                <IconButton onClick={handUserAuth}>
+                  {!user ? (
+                    <Login color="primary" />
+                  ) : (
+                    <Logout color="secondary" />
+                  )}
+                </IconButton>
+              </Box>
+            </Box>
+          </AppBar>
+        </Box>
+
+        {/* mobile navigation */}
+        <LabelBottomNavigation />
+      </header>
+    </>
   );
 }
