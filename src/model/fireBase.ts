@@ -1,6 +1,14 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  // getRedirectResult,
+  // signInWithRedirect,
+  GoogleAuthProvider,
+  // signInWithPopup,
+  signInWithRedirect,
+  signOut,
+} from "firebase/auth";
 
 const firebaseEnvVars = Object.freeze({
   API_KEY: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -32,4 +40,28 @@ const firebaseConfig = Object.freeze({
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
+
+// --------------------------------------------------------- auth part ---------------------------------------------------------
+
 export const auth = getAuth(app);
+
+const provider = new GoogleAuthProvider();
+export const handleSignIn = async () => {
+  try {
+    // await signInWithRedirect(auth, provider);
+    signInWithRedirect(auth, provider);
+    console.log("User signed in successfully");
+  } catch (error) {
+    console.error("Error signing in with Google", error);
+  }
+};
+
+export const handleLogOut = async () => {
+  try {
+    await signOut(auth);
+
+    console.log("User logged out successfully");
+  } catch (error) {
+    console.error("Error logging out", error);
+  }
+};

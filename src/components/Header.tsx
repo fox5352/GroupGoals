@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { onAuthStateChanged } from "firebase/auth";
+import { getRedirectResult, onAuthStateChanged } from "firebase/auth";
 import { auth, handleLogOut, handleSignIn } from "../model/fireBase";
 import type { User } from "firebase/auth";
 
@@ -15,9 +15,21 @@ export default function Header() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // Handle the result of the redirect
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          console.log("Redirect result user:", result.user);
+        }
+      })
+      .catch((error) => {
+        console.error("Error getting redirect result:", error);
+      });
+
     const subscribe = onAuthStateChanged(auth, (current) => {
       setUser(current);
     });
+
     return () => {
       subscribe();
       setUser(null);
