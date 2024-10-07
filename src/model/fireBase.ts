@@ -2,10 +2,9 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
-  // getRedirectResult,
-  // signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
-  // signInWithPopup,
+  signInWithPopup,
   signInWithRedirect,
   signOut,
 } from "firebase/auth";
@@ -48,13 +47,25 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 export const handleSignIn = async () => {
   try {
-    // await signInWithRedirect(auth, provider);
-    signInWithRedirect(auth, provider);
-    console.log("User signed in successfully");
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      await signInWithRedirect(auth, provider);
+      console.log("Redirect sign-in initiated");
+    } else {
+      const result = await signInWithPopup(auth, provider);
+      console.log("Popup sign-in successful", result.user);
+    }
   } catch (error) {
     console.error("Error signing in with Google", error);
+    if (error instanceof Error) {
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
+    }
   }
 };
+
+export const getSignInResult = () => getRedirectResult(auth);
 
 export const handleLogOut = async () => {
   try {
