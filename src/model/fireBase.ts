@@ -53,8 +53,8 @@ export const handleSignIn = async () => {
       await signInWithRedirect(auth, provider);
       console.log("Redirect sign-in initiated");
     } else {
-      const result = await signInWithPopup(auth, provider);
-      console.log("Popup sign-in successful", result.user);
+      await signInWithPopup(auth, provider);
+      console.log("Popup sign-in successful");
     }
   } catch (error) {
     console.error("Error signing in with Google", error);

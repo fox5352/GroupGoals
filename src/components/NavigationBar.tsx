@@ -18,8 +18,7 @@ export default function NavigationBar({ sx }: { sx: SxProps<Theme> }) {
   };
 
   React.useEffect(() => {
-    console.log(pathname);
-    for (const [key, value] of Object.entries(map)) {
+    for (const [key, value] of Object.entries(map)) {        
       if (pathname === value) {
         setValue(key);
       }
@@ -28,7 +27,6 @@ export default function NavigationBar({ sx }: { sx: SxProps<Theme> }) {
   }, [pathname])
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    console.log("event", event);
     setValue(newValue);
     router(map[newValue]);
   };
