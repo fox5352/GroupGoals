@@ -6,7 +6,6 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import theme from "../theme";
-// import LocationOnIcon from "@mui/icons-material/LocationOn";
 
 export default function LabelBottomNavigation() {
   const [value, setValue] = React.useState("home");

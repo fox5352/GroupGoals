@@ -59,57 +59,52 @@ export default function Header() {
   };
 
   return (
-    <>
-      <header>
-        {/* <h2 className={styles.title}>Group-Goal's</h2> */}
-        {/* TODO: desktop navigation */}
-        {/* <nav>{!user ? <SignInButton /> : <LogOutButton />}</nav> */}
-        <Box sx={{ flexGrow: 1 }} color="secondary">
-          <AppBar
+    <header>
+      <Box sx={{ flexGrow: 1 }} color="secondary">
+        <AppBar
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            backgroundColor: theme.palette.background.paper,
+          }}
+          position="static"
+        >
+          <Box
             sx={{
               display: "flex",
-              justifyContent: "center",
-              backgroundColor: theme.palette.background.paper,
+              justifyContent: "space-between",
+              maxWidth: 1260,
+              width: "100%",
+              marginX: "auto",
             }}
-            position="static"
           >
-            <Box
+            {/* LOGO */}
+            <Typography
+              component="h1"
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                maxWidth: 1260,
-                width: "100%",
-                marginX: "auto",
+                fontWeight: 700,
+                fontSize: { xs: "1.5rem", sm: "1.75rem" },
+                px: 0.6,
               }}
             >
-              {/* LOGO */}
-              <Typography
-                component="h1"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: "1.5rem", sm: "1.75rem" },
-                  px: 0.6,
-                }}
-              >
-                Group Goal's
-              </Typography>
-              {/* top nav bar */}
-              <Box sx={{ display: "flex" }}>
-                <IconButton onClick={handUserAuth}>
-                  {!user ? (
-                    <Login color="primary" />
-                  ) : (
-                    <Logout color="secondary" />
-                  )}
-                </IconButton>
-              </Box>
+              Group Goal's
+            </Typography>
+            {/* top nav bar */}
+            <Box sx={{ display: "flex" }}>
+              <IconButton onClick={handUserAuth}>
+                {!user ? (
+                  <Login color="primary" />
+                ) : (
+                  <Logout color="secondary" />
+                )}
+              </IconButton>
             </Box>
-          </AppBar>
-        </Box>
+          </Box>
+        </AppBar>
+      </Box>
 
-        {/* mobile navigation */}
-        <LabelBottomNavigation />
-      </header>
-    </>
+      {/* mobile navigation */}
+      <LabelBottomNavigation />
+    </header>
   );
 }
