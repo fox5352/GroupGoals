@@ -18,6 +18,7 @@ import theme from "../theme";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const handleRedirectResult = async () => {
@@ -50,11 +51,13 @@ export default function Header() {
     };
   }, []);
 
-  const handUserAuth = () => {
-    if (!user) {
-      handleSignIn();
+  const handUserAuth = async () => {
+    if (!isLoading && !user) {
+      setIsLoading(true);
+      await handleSignIn();
+      setIsLoading(false);
     } else {
-      handleLogOut();
+      await handleLogOut();
     }
   };
 
