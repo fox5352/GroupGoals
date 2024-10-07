@@ -1,22 +1,31 @@
 import * as React from "react";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import FolderIcon from "@mui/icons-material/Folder";
-import RestoreIcon from "@mui/icons-material/Restore";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import theme from "../theme";
 import { Home, People, Settings } from "@mui/icons-material";
+import { SxProps, Theme } from "@mui/material";
 
-export default function LabelBottomNavigation() {
+export default function NavigationBar({ sx }: { sx: SxProps<Theme> }) {
   const [value, setValue] = React.useState("home");
   const router = useNavigate();
+  const {pathname} = useLocation();
 
   const map: Record<string, string> = {
     home: "/",
     groups: "/groups",
     settings: "/settings",
   };
+
+  React.useEffect(() => {
+    console.log(pathname);
+    for (const [key, value] of Object.entries(map)) {
+      if (pathname === value) {
+        setValue(key);
+      }
+    }
+  
+  }, [pathname])
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     console.log("event", event);
@@ -25,19 +34,7 @@ export default function LabelBottomNavigation() {
   };
 
   return (
-    <BottomNavigation
-      sx={{
-        display: { sm: "flex", md: "none" },
-        justifyContent: "space-evenly",
-        width: "100%",
-        position: "fixed",
-        bottom: "0",
-        left: "0",
-        backgroundColor: theme.palette.background.paper,
-      }}
-      value={value}
-      onChange={handleChange}
-    >
+    <BottomNavigation sx={sx} value={value} onChange={handleChange}>
       <BottomNavigationAction
         sx={{ color: theme.palette.secondary.main }}
         label="Home"
