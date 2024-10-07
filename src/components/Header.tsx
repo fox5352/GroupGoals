@@ -1,54 +1,19 @@
-import { useEffect, useState } from "react";
 
-import { onAuthStateChanged } from "firebase/auth";
 import {
-  auth,
   handleLogOut,
   handleSignIn,
-  getSignInResult,
 } from "../model/fireBase";
+
 import type { User } from "firebase/auth";
 
-import LabelBottomNavigation from "./LabelBottomNavigation";
+import NavigationBar from "./NavigationBar";
 
 import { AppBar, Box, IconButton, Typography } from "@mui/material";
 import { Login, Logout } from "@mui/icons-material";
 
 import theme from "../theme";
 
-export default function Header() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getSignInResult();
-        if (result && result.user) {
-          console.log("Redirect result user:", result.user);
-          setUser(result.user);
-        } else {
-          console.log("No redirect result");
-        }
-      } catch (error) {
-        console.error("Error getting redirect result:", error);
-        if (error instanceof Error) {
-          console.error("Error name:", error.name);
-          console.error("Error message:", error.message);
-        }
-      }
-    };
-
-    handleRedirectResult();
-
-    const subscribe = onAuthStateChanged(auth, (current) => {
-      setUser(current);
-    });
-
-    return () => {
-      subscribe();
-      setUser(null);
-    };
-  }, []);
+export default function Header({user}: {user: User | null}) {
 
   const handUserAuth = () => {
     if (!user) {
@@ -61,32 +26,11 @@ export default function Header() {
   return (
     <header>
       <Box sx={{ flexGrow: 1 }} color="secondary">
-        <AppBar
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            backgroundColor: theme.palette.background.paper,
-          }}
-          position="static"
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              maxWidth: 1260,
-              width: "100%",
-              marginX: "auto",
-            }}
-          >
+        <AppBar sx={{ display: "flex", justifyContent: "center", backgroundColor: theme.palette.background.paper }} position="static">
+          {/* Top nav bar */}
+          <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: 1260, width: "100%", marginX: "auto" }}>
             {/* LOGO */}
-            <Typography
-              component="h1"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: "1.5rem", sm: "1.75rem" },
-                px: 0.6,
-              }}
-            >
+            <Typography component="h1" sx={{ fontWeight: 700, fontSize: { xs: "1.5rem", sm: "1.75rem" }, px: 0.6 }} >
               Group Goal's
             </Typography>
             {/* top nav bar */}
@@ -94,17 +38,15 @@ export default function Header() {
               <IconButton onClick={handUserAuth}>
                 {!user ? (
                   <Login color="primary" />
-                ) : (
-                  <Logout color="secondary" />
-                )}
+                ) : 
+                    <Logout color="secondary" />}
               </IconButton>
+              {/* -------------------------------------------------  ------------------------------------------------- */}
+              <NavigationBar sx={{ display: "flex", width: {xs: "100%", md: "auto"}, position: { xs: "fixed",  md: "relative"}, left: {xs: "0", md: "none"}, bottom: {xs: "0", md: "none"} , height: "42px" }} />
             </Box>
           </Box>
         </AppBar>
       </Box>
-
-      {/* mobile navigation */}
-      <LabelBottomNavigation />
     </header>
   );
 }
