@@ -6,6 +6,7 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
 import theme from "../theme";
+import { Home, People, Settings } from "@mui/icons-material";
 
 export default function LabelBottomNavigation() {
   const [value, setValue] = React.useState("home");
@@ -38,19 +39,22 @@ export default function LabelBottomNavigation() {
       onChange={handleChange}
     >
       <BottomNavigationAction
+        sx={{ color: theme.palette.secondary.main }}
         label="Home"
         value="home"
-        icon={<RestoreIcon />}
+        icon={<Home />}
       />
       <BottomNavigationAction
+        sx={{ color: theme.palette.secondary.main }}
         label="Groups"
         value="groups"
-        icon={<FavoriteIcon />}
+        icon={<People />}
       />
       <BottomNavigationAction
+        sx={{ color: theme.palette.secondary.main }}
         label="Settings"
         value="settings"
-        icon={<FolderIcon />}
+        icon={<Settings />}
       />
     </BottomNavigation>
   );
