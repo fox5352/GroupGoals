@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { onAuthStateChanged } from "firebase/auth";
-import {
-  auth,
-  handleLogOut,
-  handleSignIn,
-  getSignInResult,
-} from "../model/fireBase";
+import { auth, handleLogOut, handleSignIn } from "../model/fireBase";
 import type { User } from "firebase/auth";
 
 import LabelBottomNavigation from "./LabelBottomNavigation";
@@ -18,28 +13,9 @@ import theme from "../theme";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getSignInResult();
-        if (result && result.user) {
-          console.log("Redirect result user:", result.user);
-          setUser(result.user);
-        } else {
-          console.log("No redirect result");
-        }
-      } catch (error) {
-        console.error("Error getting redirect result:", error);
-        if (error instanceof Error) {
-          console.error("Error name:", error.name);
-          console.error("Error message:", error.message);
-        }
-      }
-    };
-
-    handleRedirectResult();
-
     const subscribe = onAuthStateChanged(auth, (current) => {
       setUser(current);
     });
@@ -50,11 +26,13 @@ export default function Header() {
     };
   }, []);
 
-  const handUserAuth = () => {
-    if (!user) {
-      handleSignIn();
+  const handUserAuth = async () => {
+    if (!isLoading && !user) {
+      setIsLoading(true);
+      await handleSignIn();
+      setIsLoading(false);
     } else {
-      handleLogOut();
+      await handleLogOut();
     }
   };
 
