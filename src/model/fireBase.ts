@@ -47,7 +47,7 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 export const handleSignIn = async () => {
   try {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isMobile = false; // /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     if (isMobile) {
       await signInWithRedirect(auth, provider);
