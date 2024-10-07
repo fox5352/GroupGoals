@@ -8,7 +8,7 @@ import { auth } from "./model/fireBase";
 
 // components
 import Header from "./components/Header";
-import { Home } from "./routes/Home";
+import Home from "./routes/Home";
 
 import "./App.css";
 
