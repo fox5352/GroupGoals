@@ -123,7 +123,7 @@ export function SimpleSnackbar() {
     <>
       <Snackbar
         open={open}
-        autoHideDuration={2000}
+        autoHideDuration={5000}
         onClose={handleClose}
         message="Note archived"
       >
