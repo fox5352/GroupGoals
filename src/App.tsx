@@ -7,10 +7,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./model/fireBase";
 
 // components
-import Home from "./routes/Home/Home";
+import Home from "./pages/Home/Home";
 
 import "./App.css";
-import RootLayout from "./routes/RootLayout";
+import RootLayout from "./pages/RootLayout";
 
 // ---------------------------------------------------------------- header component ----------------------------------------------------------------
 
@@ -30,10 +30,9 @@ function App() {
 
   return (
     <Router>
-      {/* TODO: add header */}
       <Routes>
         <Route path="/" element={<RootLayout user={user} />}>
-          <Route index element={<Home />} />
+          <Route index element={<Home user={user} />} />
           {/* TODO: implement /groups route */}
           {/* TODO: implement /settings route*/}
 
@@ -41,7 +40,6 @@ function App() {
           <Route path="*" element={<h1>Route Not Found</h1>} />
         </Route>
       </Routes>
-      {/* TODO: add footer */}
     </Router>
   );
 }

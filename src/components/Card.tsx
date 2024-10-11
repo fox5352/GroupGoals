@@ -1,9 +1,9 @@
-import theme from "../../../theme";
+import theme from "../theme";
 import Card from "@mui/material/Card";
 import { CardContent, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export function GroupCard({ name, id }: { name: string; id: string }) {
+export default function GroupCard({ name, id }: { name: string; id: string }) {
   return (
     <Card
       sx={{
@@ -18,7 +18,7 @@ export function GroupCard({ name, id }: { name: string; id: string }) {
       }}
       variant="outlined"
     >
-      <Link to={`/board/${id}`} style={{ textDecoration: "none" }}>
+      <Link to={`groups/${id}`} style={{ textDecoration: "none" }}>
         <CardContent
           sx={{
             width: "100%",
