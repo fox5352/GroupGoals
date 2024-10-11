@@ -10,7 +10,7 @@ import { Login, Logout } from "@mui/icons-material";
 import theme from "../theme";
 
 export default function Header({ user }: { user: User | null }) {
-  const handUserAuth = () => {
+  const handUserAuth = async () => {
     if (!user) {
       handleSignIn();
     } else {
