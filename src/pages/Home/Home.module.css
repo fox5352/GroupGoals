@@ -6,6 +6,7 @@
   width: 100%;
 
   padding: 0.5rem 0.3125rem;
+  padding-bottom: 46px;
 }
 
 .messageContainer {
@@ -22,14 +23,22 @@
   }
 }
 
+@media screen and (min-width: 900px) {
+  .main {
+    padding-bottom: 0.5rem;
+  }
+}
+
 @media screen and (min-width: 1024px) {
   .main {
     grid-template-columns: repeat(3, 1fr);
+    padding-bottom: 0.5rem;
   }
 }
 
 @media screen and (min-width: 1200px) {
   .main {
     grid-template-columns: repeat(5, 1fr);
+    padding-bottom: 0.5rem;
   }
 }
