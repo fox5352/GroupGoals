@@ -11,43 +11,50 @@ import GroupCard from "../../components/Card";
 function Home({ user }: { user: User | null }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [boards, setBoards] = useState<Array<BoardType> | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<{
+    content: string;
+    color: string;
+  } | null>(null);
 
   useEffect(() => {
     const fetchBoards = async () => {
       setIsLoading(true);
-      setError(null);
+      setMessage(null);
 
+      // invalid user state
       if (!user) {
-        setError("User is not logged in");
+        setMessage({ content: "User is not logged in", color: "warning" });
+        setBoards(null);
         setIsLoading(false);
-      } else {
-        const data = await getOwnedBoardsShallow(user.uid);
-
-        if (data == null || data.length === 0) {
-          setMessage("No boards found");
-        } else {
-          setError(null);
-          setBoards(data);
-        }
+        return;
       }
+
+      const data = await getOwnedBoardsShallow(user.uid);
+
+      // empty board state
+      if (data == null || data.length === 0) {
+        setMessage({ content: "No boards found", color: "textSecondary" });
+        setBoards(null);
+        setIsLoading(false);
+        return;
+      }
+
+      // success state
+      setMessage(null);
+      setBoards(data);
       setIsLoading(false);
     };
 
     fetchBoards();
   }, [user]);
 
-  // FIXME: remove when done testing
-
-  if (error || isLoading || message) {
+  if (isLoading || message) {
     return (
       <div className={styles.messageContainer}>
-        {error && <Message message={error} color="warning" />}
         {isLoading && (
           <Message message="Fetching your boards..." color="textSecondary" />
         )}
-        {message && <Message message={message} color="textSecondary" />}
+        {message && <Message message={message.content} color={message.color} />}
       </div>
     );
   }
