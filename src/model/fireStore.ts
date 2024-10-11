@@ -1,51 +1,63 @@
 import {
   getFirestore,
   collection,
-  getDocs,
   addDoc,
+  getDocs,
   query,
   where,
-} from "firebase/firestore";
+} from "firebase/firestore/lite";
 import { app } from "./fireBase";
 
 const db = getFirestore(app, "");
 
-export async function getBoards(userId: string): Promise<any | null> {
-  const boardsCol = collection(db, "boards");
+const boardsColRef = collection(db, "boards");
+// TODO: const tasksColRef = collection(db, "tasks");
 
-  // // Use a compound query that includes both conditions
-  const boardsQuery = query(
-    boardsCol,
-    where("userId", "==", userId) // This is okay
-  );
+export interface TaskType {
+  uuid: string;
+  title: string;
+  description: string;
+  status: "completed" | "in-progress" | "pending";
+  createdAt: Date;
+  completedDate: Date | null;
+}
 
-  const colabsQuery = query(
-    boardsCol,
-    where("colabs", "array-contains", userId) // This is okay
-  );
+export interface BoardType {
+  uuid: string;
+  name: string;
+  userId: string;
+  colabs: Array<string>;
+  tasks: Array<string>;
+  createdAt: Date;
+}
+
+export async function getOwnedBoardsShallow(
+  userId: string
+): Promise<Array<BoardType> | null> {
+  const ownedBoards = query(boardsColRef, where("userId", "==", userId));
 
   try {
-    // Execute both queries and combine results
-    const [authorBoardsSnapshot, colabsBoardsSnapshot] = await Promise.all([
-      getDocs(boardsQuery),
-      getDocs(colabsQuery),
-    ]);
+    const snapshot = await getDocs(ownedBoards);
 
-    const authorBoards = authorBoardsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    const colabsBoards = colabsBoardsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const boards: Array<BoardType> = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        uuid: doc.id,
+        userId,
+        name: data.name,
+        colabs: data.colabs,
+        tasks: data.tasks,
+        createdAt: data.createdAt,
+      };
+    });
 
-    // Combine the results and remove duplicates if necessary
-    const boardsList = [...authorBoards, ...colabsBoards];
-
-    return boardsList;
+    if (boards) {
+      return boards;
+    } else {
+      return null;
+    }
   } catch (error) {
-    console.error("Error getting boards:", error);
+    console.error("Error getting owned boards:", error);
     return null;
   }
 }
@@ -65,6 +77,8 @@ export async function createBoard(
       tasks: [],
       createdAt: new Date(),
     });
+
+    console.log(result);
 
     return result.id;
   } catch (error) {

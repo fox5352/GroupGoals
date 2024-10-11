@@ -1,5 +1,5 @@
-import { onAuthStateChanged } from "firebase/auth";
-import { auth, handleLogOut, handleSignIn } from "../model/fireBase";
+import { handleLogOut, handleSignIn } from "../model/fireBase";
+
 import type { User } from "firebase/auth";
 
 import NavigationBar from "./NavigationBar";
@@ -8,28 +8,11 @@ import { AppBar, Box, IconButton, Typography } from "@mui/material";
 import { Login, Logout } from "@mui/icons-material";
 
 import theme from "../theme";
-import { useEffect, useState } from "react";
 
-export default function Header() {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const subscribe = onAuthStateChanged(auth, (current) => {
-      setUser(current);
-    });
-
-    return () => {
-      subscribe();
-      setUser(null);
-    };
-  }, []);
-
-  const handUserAuth = async () => {
-    if (!isLoading && !user) {
-      setIsLoading(true);
-      await handleSignIn();
-      setIsLoading(false);
+export default function Header({ user }: { user: User | null }) {
+  const handUserAuth = () => {
+    if (!user) {
+      handleSignIn();
     } else {
       await handleLogOut();
     }

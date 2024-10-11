@@ -7,11 +7,10 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./model/fireBase";
 
 // components
-import Header from "./components/Header";
-import { Home } from "./routes/Home";
+import Home from "./pages/Home/Home";
 
 import "./App.css";
-
+import RootLayout from "./pages/RootLayout";
 
 // ---------------------------------------------------------------- header component ----------------------------------------------------------------
 
@@ -29,21 +28,24 @@ function App() {
     };
   }, []);
 
-  
   return (
     <Router>
-      {/* TODO: add header */}
-      <Header  user={user} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        {/* TODO: implement /groups route */}
-        {/* TODO: implement /settings route*/}
-        {/* TODO: implement 404 page */}
-        <Route path="*" element={(<h1>Route Not Found</h1>)} />
+        <Route path="/" element={<RootLayout user={user} />}>
+          <Route index element={<Home user={user} />} />
+          {/* TODO: implement /groups route */}
+          {/* TODO: implement /settings route*/}
+
+          {/* TODO: implement 404 page */}
+          <Route path="*" element={<h1>Route Not Found</h1>} />
+        </Route>
       </Routes>
-      {/* TODO: add footer */}
     </Router>
   );
 }
+
+// function Protected({user, children}) {
+
+// }
 
 export default App;
