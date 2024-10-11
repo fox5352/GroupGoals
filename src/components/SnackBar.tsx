@@ -123,6 +123,7 @@ export function SimpleSnackbar() {
     <>
       <Snackbar
         open={open}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
         autoHideDuration={5000}
         onClose={handleClose}
         message="Note archived"
