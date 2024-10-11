@@ -8,6 +8,7 @@ import { AppBar, Box, IconButton, Typography } from "@mui/material";
 import { Login, Logout } from "@mui/icons-material";
 
 import theme from "../theme";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
