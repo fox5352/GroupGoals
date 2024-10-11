@@ -2,7 +2,6 @@
 import { initializeApp } from "firebase/app";
 import {
   getAuth,
-  getRedirectResult,
   GoogleAuthProvider,
   signInWithPopup,
   signInWithRedirect,
@@ -64,8 +63,6 @@ export const handleSignIn = async () => {
     }
   }
 };
-
-export const getSignInResult = () => getRedirectResult(auth);
 
 export const handleLogOut = async () => {
   try {
