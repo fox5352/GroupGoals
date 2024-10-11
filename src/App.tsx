@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 
 import type { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -11,6 +17,7 @@ import Home from "./pages/Home/Home";
 
 import "./App.css";
 import RootLayout from "./pages/RootLayout";
+import NotFound from "./pages/NotFound/NotFound";
 
 // ---------------------------------------------------------------- header component ----------------------------------------------------------------
 
@@ -33,19 +40,24 @@ function App() {
       <Routes>
         <Route path="/" element={<RootLayout user={user} />}>
           <Route index element={<Home user={user} />} />
-          {/* TODO: implement /groups route */}
-          {/* TODO: implement /settings route*/}
+          {/* protected */}
+          <Route element={<Protected user={user} />}>
+            {/* TODO: implement /groups route */}
+            {/* TODO: implement /settings route*/}
+          </Route>
 
           {/* TODO: implement 404 page */}
-          <Route path="*" element={<h1>Route Not Found</h1>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </Router>
   );
 }
 
-// function Protected({user, children}) {
+function Protected({ user }: { user: User | null }) {
+  if (!user) return <Navigate to="/" />;
 
-// }
+  return <Outlet />;
+}
 
 export default App;
