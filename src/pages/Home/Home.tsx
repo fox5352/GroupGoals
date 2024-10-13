@@ -2,19 +2,23 @@ import { useEffect, useState } from "react";
 import { Typography } from "@mui/material";
 
 import { BoardType, getOwnedBoardsShallow } from "../../model/fireStore";
-import { User } from "firebase/auth";
 
 import styles from "./Home.module.css";
 
 import GroupCard from "../../components/Card";
+import HomeControls from "./components/HomeControls";
+import { useUser } from "../../state/UserProvider";
 
-function Home({ user }: { user: User | null }) {
+interface MessageType {
+  content: string;
+  color: string;
+}
+
+function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [boards, setBoards] = useState<Array<BoardType> | null>(null);
-  const [message, setMessage] = useState<{
-    content: string;
-    color: string;
-  } | null>(null);
+  const [message, setMessage] = useState<MessageType | null>(null);
+  const { user } = useUser();
 
   useEffect(() => {
     const fetchBoards = async () => {
@@ -30,6 +34,8 @@ function Home({ user }: { user: User | null }) {
       }
 
       const data = await getOwnedBoardsShallow(user.uid);
+
+      console.log(data);
 
       // empty board state
       if (data == null || data.length === 0) {
@@ -48,37 +54,38 @@ function Home({ user }: { user: User | null }) {
     fetchBoards();
   }, [user]);
 
-  if (isLoading || message) {
-    return (
-      <div className={styles.messageContainer}>
-        {isLoading && (
-          <Message message="Fetching your boards..." color="textSecondary" />
-        )}
-        {message && <Message message={message.content} color={message.color} />}
-      </div>
-    );
-  }
-
   return (
     <main className={styles.main}>
-      {boards !== null ? (
-        boards.map((board) => {
-          return <GroupCard key={board.uuid} id={board.uuid} {...board} />;
-        })
-      ) : (
-        <></>
+      {user && <HomeControls />}
+      {(message || isLoading) && (
+        <div className={styles.messageContainer}>
+          {message && (
+            <Message message={message.content} color={message.color} />
+          )}
+          {isLoading && (
+            <Message message="Fetching your boards..." color="textSecondary" />
+          )}
+        </div>
       )}
+      <div className={styles.grid}>
+        {boards !== null ? (
+          boards.map((board) => {
+            return <GroupCard key={board.uuid} id={board.uuid} {...board} />;
+          })
+        ) : (
+          <></>
+        )}
+      </div>
     </main>
   );
 }
 
 const Message = ({ message, color }: { message: string; color: string }) => {
   return (
-    <Typography sx={{ fontSize: "1.5rem" }} color={color}>
+    <Typography variant="h4" sx={{ fontSize: "1.4rem" }} color={color}>
       {message}
     </Typography>
   );
 };
 
-// TODO: memoize if this gets slow;
 export default Home;
