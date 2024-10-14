@@ -35,8 +35,6 @@ function Home() {
 
       const data = await getOwnedBoardsShallow(user.uid);
 
-      console.log(data);
-
       // empty board state
       if (data == null || data.length === 0) {
         setMessage({ content: "No boards found", color: "textSecondary" });

@@ -14,6 +14,7 @@ import Home from "./pages/Home/Home";
 import "./App.css";
 import RootLayout from "./pages/RootLayout";
 import NotFound from "./pages/NotFound/NotFound";
+import GroupsLayout from "./pages/Groups/GroupsLayout";
 
 // ---------------------------------------------------------------- header component ----------------------------------------------------------------
 
@@ -26,7 +27,7 @@ function App() {
             <Route index element={<Home />} />
             {/* protected */}
             <Route element={<Protected />}>
-              {/* TODO: implement /groups route */}
+              <Route path="groups" element={<GroupsLayout />}></Route>
               {/* TODO: implement /settings route*/}
             </Route>
 
